@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:music_player/componenets/my_drawer.dart';
 import 'package:music_player/model/playlist_provider.dart';
 import 'package:music_player/model/song.dart';
+import 'package:music_player/pages/song_page.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulHookWidget {
@@ -16,16 +17,16 @@ class _HomePageState extends State<HomePage> {
   late final PlaylistProvider playlistProvider;
   @override
   void initState() {
-    
-    playlistProvider=Provider.of<PlaylistProvider>(context,listen: false);
+    playlistProvider = Provider.of<PlaylistProvider>(context, listen: false);
   }
 
-  void gotoSong(int songIndex){
+  void gotoSong(int songIndex) {
     //update current song index
-    playlistProvider.currentSongIndex=songIndex;
+    playlistProvider.currentSongIndex = songIndex;
     //Navigate to Song Page
-  
-  Navigator.push(context, MaterialPageRoute(builder: (context)=>SongPage()));
+
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => SongPage()));
   }
 
   @override
@@ -50,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                 title: Text(song.songName),
                 subtitle: Text(song.artistName),
                 leading: Image.asset(song.albumArtImagePath),
-                onTap: ()=> ,
+                onTap: () => gotoSong(index),
               );
             },
           );
