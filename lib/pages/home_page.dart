@@ -12,9 +12,7 @@ class HomePage extends HookWidget {
       appBar: AppBar(
         title: Text("P L A Y L I S T"),
       ),
-      drawer: MyDrawer(
-
-      ),
+      drawer: MyDrawer(),
     );
   }
 }

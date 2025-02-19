@@ -20,7 +20,7 @@ class MyDrawer extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 25, top: 25),
+            padding: EdgeInsets.only(left: 25, top: 25),
             child: ListTile(
               leading: Icon(Icons.home),
               title: Text("H O M E"),
