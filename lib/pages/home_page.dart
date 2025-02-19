@@ -1,9 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:music_player/componenets/my_drawer.dart';
+import 'package:music_player/model/playlist_provider.dart';
+import 'package:music_player/model/song.dart';
+import 'package:provider/provider.dart';
 
-class HomePage extends HookWidget {
+class HomePage extends StatefulHookWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late final PlaylistProvider playlistProvider;
+  @override
+  void initState() {
+    
+    playlistProvider=Provider.of<PlaylistProvider>(context,listen: false);
+  }
+
+  void gotoSong(int songIndex){
+    //update current song index
+    playlistProvider.currentSongIndex=songIndex;
+    //Navigate to Song Page
+  
+  Navigator.push(context, MaterialPageRoute(builder: (context)=>SongPage()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +36,26 @@ class HomePage extends HookWidget {
         title: Text("P L A Y L I S T"),
       ),
       drawer: MyDrawer(),
+      body: Consumer<PlaylistProvider>(
+        builder: (context, value, child) {
+          final List<Song> playlist = value.playlist;
+          return ListView.builder(
+            itemCount: playlist.length,
+            itemBuilder: (context, index) {
+              // get PlayList
+              final Song song = playlist[index];
+
+              //return Ui
+              return ListTile(
+                title: Text(song.songName),
+                subtitle: Text(song.artistName),
+                leading: Image.asset(song.albumArtImagePath),
+                onTap: ()=> ,
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
