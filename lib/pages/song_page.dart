@@ -8,9 +8,11 @@ class SongPage extends StatelessWidget {
 
 //convert duration into min:sec
   String formatTime(Duration duration) {
-    String twoDigitSeconds = duration.inSeconds.remainder(60).toString();
-
+    String twoDigitSeconds =
+        duration.inSeconds.remainder(60).toString().padLeft(2, '0');
     String formattedTime = "${duration.inMinutes.toString()}:$twoDigitSeconds";
+
+    // String formattedTime = "${duration.inMinutes.toString()}:$twoDigitSeconds";
 
     return formattedTime;
   }

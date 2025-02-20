@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/model/song.dart';
@@ -5,20 +7,20 @@ import 'package:music_player/model/song.dart';
 class PlaylistProvider extends ChangeNotifier {
   final List<Song> playlist = [
     Song(
-        songName: "s",
-        artistName: "neyo",
+        songName: "Why This Kolaveri Di_1",
+        artistName: "Anirudh Ravichander and Dhanush",
         albumArtImagePath: "assets/images/3_1.jpg",
         audioPath:
             "assets/audio/3 - Why This Kolaveri Di Official Video _ Dhanush_ Anirudh(MP3_320K).mp3"),
     Song(
-        songName: "2",
-        artistName: "acid rap",
+        songName: "Why This Kolaveri Di_2",
+        artistName: "Anirudh Ravichander and Dhanush",
         albumArtImagePath: "assets/images/3_2.jpg",
         audioPath:
             "assets/audio/3 - Why This Kolaveri Di Official Video _ Dhanush_ Anirudh(MP3_320K).mp3"),
     Song(
-        songName: "3",
-        artistName: "Asap Rocky",
+        songName: "Why This Kolaveri Di_3",
+        artistName: "Anirudh Ravichander and Dhanush",
         albumArtImagePath: "assets/images/3_3.jpg",
         audioPath:
             "assets/audio/3 - Why This Kolaveri Di Official Video _ Dhanush_ Anirudh(MP3_320K).mp3"),
@@ -38,13 +40,28 @@ class PlaylistProvider extends ChangeNotifier {
   //initally not playing
   bool isPlaying = false;
 
-//play athe song
+// Initialize with first song
+  int? currentSongIndex = 0;
+
+//play the song
   void play() async {
-    final String path = playlist[currentSongIndex!].audioPath;
-    await audioPlayer.stop();
-    await audioPlayer.play(AssetSource(path));
-    isPlaying = true;
-    notifyListeners();
+    try {
+      currentSongIndex ??= 1;
+
+      log('Playing song at index: $currentSongIndex');
+      final String fullPath = playlist[currentSongIndex!].audioPath;
+      final String assetPath = fullPath.replaceFirst('assets/', '');
+
+      log('Asset path: $assetPath');
+      await audioPlayer.stop();
+      await audioPlayer.play(AssetSource(assetPath));
+      isPlaying = true;
+      notifyListeners();
+    } catch (e) {
+      log('Error playing audio: $e');
+      isPlaying = false;
+      notifyListeners();
+    }
   }
 
   //pause current song
@@ -78,20 +95,13 @@ class PlaylistProvider extends ChangeNotifier {
   }
 
   void playNextSong() {
-    if (currentSongIndex != null) {
-      //if the current song is not the last song
-      if (currentSongIndex! < playlist.length - 1) {
-        //play the next song
-        currentSongIndex = currentSongIndex! + 1;
-        // playSong(currentSongIndex!);
-        // play();
-      } else {
-        //play the first song
-        currentSongIndex = 0;
-        playSong(currentSongIndex!);
-        play();
-      }
+    if (currentSongIndex == null) {
+      currentSongIndex = 0;
+    } else {
+      currentSongIndex = (currentSongIndex! + 1) % playlist.length;
     }
+    playSong(currentSongIndex!);
+    log('Playing next song at index: $currentSongIndex');
   }
 
   void playPreviousSong() async {
@@ -133,9 +143,6 @@ class PlaylistProvider extends ChangeNotifier {
       playNextSong();
     });
   }
-
-//before 32:53
-  int? currentSongIndex;
 
   /// Play the song at the given index
   void playSong(int newIndex) {

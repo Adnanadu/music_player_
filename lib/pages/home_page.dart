@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:music_player/componenets/my_drawer.dart';
 import 'package:music_player/model/playlist_provider.dart';
 import 'package:music_player/model/song.dart';
 import 'package:music_player/pages/song_page.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulHookWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
@@ -51,7 +50,10 @@ class _HomePageState extends State<HomePage> {
               return ListTile(
                 title: Text(song.songName),
                 subtitle: Text(song.artistName),
-                leading: Image.asset(song.albumArtImagePath),
+                leading: Image.asset(
+                  song.albumArtImagePath,
+                  width: 80,
+                ),
                 onTap: () => gotoSong(index),
               );
             },
