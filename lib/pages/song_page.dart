@@ -8,8 +8,12 @@ class SongPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PlaylistProvider>(
-      builder: (context, value, child) => Scaffold(
+    return Consumer<PlaylistProvider>(builder: (context, value, child) {
+      final playlist = value.playlist;
+
+      //get current song
+      final currentSong = playlist[value.currentSongIndex ?? 0];
+      return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         body: SafeArea(
           child: Padding(
@@ -21,13 +25,18 @@ class SongPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back)),
+                    IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: Icon(Icons.arrow_back)),
                     //title
                     Text("P L A Y L I S T"),
 
                     //menu Button
                     IconButton(onPressed: () {}, icon: Icon(Icons.menu)),
                   ],
+                ),
+                SizedBox(
+                  height: 24,
                 ),
 
                 //album art
@@ -36,7 +45,7 @@ class SongPage extends StatelessWidget {
                     children: [
                       ClipRRect(
                           borderRadius: BorderRadius.circular(8),
-                          child: Image.asset("assets/images/3_1.jpg")),
+                          child: Image.asset(currentSong.albumArtImagePath)),
                       Padding(
                         padding: EdgeInsets.all(15),
                         child: Row(
@@ -46,12 +55,12 @@ class SongPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "So Sick",
+                                  currentSong.songName,
                                   style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Text("Neyo"),
+                                Text(currentSong.artistName),
                               ],
                             ),
 
@@ -140,7 +149,7 @@ class SongPage extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
