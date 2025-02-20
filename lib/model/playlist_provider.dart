@@ -97,6 +97,7 @@ class PlaylistProvider extends ChangeNotifier {
   void playPreviousSong() async {
     //if morethan 5 seconds have passed, restart the song
     if (currentDuration.inSeconds > 5) {
+      seek(Duration.zero);
     } else {
       if (currentSongIndex! > 0) {
         currentSongIndex = currentSongIndex! - 1;

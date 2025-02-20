@@ -6,6 +6,15 @@ import 'package:provider/provider.dart';
 class SongPage extends StatelessWidget {
   const SongPage({super.key});
 
+//convert duration into min:sec
+  String formatTime(Duration duration) {
+    String twoDigitSeconds = duration.inSeconds.remainder(60).toString();
+
+    String formattedTime = "${duration.inMinutes.toString()}:$twoDigitSeconds";
+
+    return formattedTime;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<PlaylistProvider>(builder: (context, value, child) {
@@ -87,7 +96,7 @@ class SongPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           //Start Time
-                          Text("0:00"),
+                          Text(formatTime(value.currentDuration)),
                           //Shuffle Button
                           IconButton(
                               onPressed: () {}, icon: Icon(Icons.shuffle)),
@@ -97,7 +106,7 @@ class SongPage extends StatelessWidget {
                               onPressed: () {}, icon: Icon(Icons.repeat)),
 
                           //End Time
-                          Text("3:30"),
+                          Text(formatTime(value.totalDuration)),
                         ],
                       ),
                     ),
@@ -109,11 +118,16 @@ class SongPage extends StatelessWidget {
                       ),
                       child: Slider(
                         min: 0,
-                        max: 100,
-                        value: 50,
+                        max: value.totalDuration.inSeconds.toDouble(),
+                        value: value.currentDuration.inSeconds.toDouble(),
                         inactiveColor: Colors.grey,
                         activeColor: Colors.blue,
-                        onChanged: (value) {},
+                        onChanged: (double double) {
+                          // value.seek(Duration(seconds: double.toInt()));
+                        },
+                        onChangeEnd: (double double) {
+                          value.seek(Duration(seconds: double.toInt()));
+                        },
                       ),
                     )
                   ],
@@ -128,20 +142,23 @@ class SongPage extends StatelessWidget {
                     //skip Previous Button
                     Expanded(
                         child: GestureDetector(
-                            onTap: () {},
+                            onTap: value.playPreviousSong,
                             child: NeuBox(child: Icon(Icons.skip_previous)))),
 
                     //Play & Pause Button
                     Expanded(
                         flex: 2,
                         child: GestureDetector(
-                            onTap: () {},
-                            child: NeuBox(child: Icon(Icons.play_arrow)))),
+                            onTap: value.pauseOrResume,
+                            child: NeuBox(
+                                child: Icon(
+                              value.isPlaying ? Icons.pause : Icons.play_arrow,
+                            )))),
 
                     //Skip Next Button
                     Expanded(
                         child: GestureDetector(
-                            onTap: () {},
+                            onTap: value.playNextSong,
                             child: NeuBox(child: Icon(Icons.skip_next)))),
                   ],
                 ),
