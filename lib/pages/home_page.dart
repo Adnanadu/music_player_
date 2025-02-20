@@ -17,6 +17,7 @@ class _HomePageState extends State<HomePage> {
   late final PlaylistProvider playlistProvider;
   @override
   void initState() {
+    super.initState();
     playlistProvider = Provider.of<PlaylistProvider>(context, listen: false);
   }
 
